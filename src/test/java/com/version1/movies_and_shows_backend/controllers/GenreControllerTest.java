@@ -10,25 +10,22 @@ import com.version1.movies_and_shows_backend.mappers.MediaMapper;
 import com.version1.movies_and_shows_backend.models.Genre;
 import com.version1.movies_and_shows_backend.models.Media;
 import com.version1.movies_and_shows_backend.services.GenreService;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(GenresController.class)
-public class GenresControllerTest {
+@WebMvcTest(GenreController.class)
+public class GenreControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -64,7 +61,7 @@ public class GenresControllerTest {
 
         List<MediaDTO> dramaMediaDTOs = mediaList.stream().filter(media -> media.getGenres().stream().anyMatch(genre -> "drama".equalsIgnoreCase(genre.getName()))).map(MediaMapper::toDTO).toList();
 
-        when(genreService.getGenreMedia("drama")).thenReturn(dramaMediaDTOs);
+        when(genreService.getMediaByGenre("drama")).thenReturn(dramaMediaDTOs);
 
         MvcResult result = mockMvc.perform(get("/genres/drama/movies")).andExpect(status().isOk()).andReturn();
 

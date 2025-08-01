@@ -16,4 +16,18 @@ public interface MediaRepository extends JpaRepository<Media, String> {
 
     Optional<Media> findFirstByTitleIgnoreCase(String title);
 
+    List<Media> findByReleaseYear(int year);
+
+    List<Media> findByTypeIgnoreCase(String type);
+
+    List<Media> findByAgeCertIgnoreCase(String ageCertification);
+
+    List<Media> findByProductionCountries_NameIgnoreCase(String productionCountry);
+
+    List<Media> findTop10ByOrderByImdbScoreDesc();
+
+    List<Media> findTop10ByOrderByTmdbScoreDesc();
+
+    List<Media> findByTitleContainingIgnoreCase(String title);
+
 }
