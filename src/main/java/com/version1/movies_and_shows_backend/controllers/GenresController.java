@@ -4,7 +4,9 @@ import com.version1.movies_and_shows_backend.dtos.GenreDTO;
 import com.version1.movies_and_shows_backend.dtos.MediaDTO;
 import com.version1.movies_and_shows_backend.models.Genre;
 import com.version1.movies_and_shows_backend.services.GenreService;
+import com.version1.movies_and_shows_backend.services.GenreStatsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,10 +17,12 @@ public class GenresController {
     @Autowired
     private GenreService genreService;
 
+    @Autowired
+    private GenreStatsService genreStatsService;
     // GET /genres
     @GetMapping
-    public List<GenreDTO> getAllGenres(@RequestParam(name = "stats", defaultValue = "false") boolean includeStats) {
-        return genreService.getAllGenres(includeStats);
+    public List<GenreDTO> getAllGenres() {
+        return genreService.getAllGenres();
     }
 
 
@@ -34,6 +38,11 @@ public class GenresController {
         return genreService.getGenreMedia(name);
     }
 
+    @PostMapping("/generate-stats")
+    public ResponseEntity<String> generateAllStats() {
+        genreStatsService.generateAllStats();
+        return ResponseEntity.ok("Genre stats generated successfully.");
+    }
     // GET /genres/{name}/analytics
 //    @GetMapping("/{name}/analytics")
 //    public GenreAnalytics getGenreAnalytics(@PathVariable String name) {

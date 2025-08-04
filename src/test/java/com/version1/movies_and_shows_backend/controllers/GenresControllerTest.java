@@ -10,6 +10,7 @@ import com.version1.movies_and_shows_backend.mappers.MediaMapper;
 import com.version1.movies_and_shows_backend.models.Genre;
 import com.version1.movies_and_shows_backend.models.Media;
 import com.version1.movies_and_shows_backend.services.GenreService;
+import com.version1.movies_and_shows_backend.services.GenreStatsService;
 import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +36,12 @@ public class GenresControllerTest {
     @MockitoBean
     private GenreService genreService;
 
-
+    @MockitoBean
+    private GenreStatsService genreStatsService;
 
     @Test
     public void testGetGenreByName() throws Exception {
-        Genre genre = new Genre("drama");
+        Genre genre = new Genre(1, "drama");
         when(genreService.getGenreByName("drama")).thenReturn(new GenreDTO(genre.getId(), genre.getName()));
 
         mockMvc.perform(get("/genres/drama")).andExpect(status().isOk()).andExpect(jsonPath("$.name").value("drama"));

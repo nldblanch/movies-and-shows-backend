@@ -2,6 +2,7 @@ package com.version1.movies_and_shows_backend.helpers;
 
 import com.version1.movies_and_shows_backend.models.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class CreateSamples {
@@ -123,6 +124,14 @@ public class CreateSamples {
                 person,
                 "Charlie Brown",
                 "Actor"
+        );
+    }
+
+    public static List<GenreStats> genreStats() {
+        return List.of(
+                new GenreStats(genreList.get(0), 10L, 20L, LocalDateTime.now()),
+                new GenreStats(genreList.get(1), 15L, 30L, LocalDateTime.now()),
+                new GenreStats(genreList.get(2), 8L, 16L, LocalDateTime.now())
         );
     }
 }
