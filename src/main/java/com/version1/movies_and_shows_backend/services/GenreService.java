@@ -44,6 +44,16 @@ public class GenreService {
 
     public List<MediaDTO> getMediaByGenre(String name) {
         List<Media> mediaList = mediaRepository.findByGenres_NameIgnoreCase(name);
-        return mediaList.stream().map(MediaMapper::toDTO).toList();
+        return mediaList.stream().map(MediaDTO::new).toList();
+    }
+
+
+    public List<MediaDTO> getTop10MoviesByGenre(String name) {
+        List<Media> mediaList = mediaRepository.findTop10ByGenres_NameIgnoreCaseAndTypeOrderByImdbScoreDesc(name, "movie");
+        return mediaList.stream().map(MediaDTO::new).toList();
+    }
+    public List<MediaDTO> getTop10ShowsByGenre(String name) {
+        List<Media> mediaList = mediaRepository.findTop10ByGenres_NameIgnoreCaseAndTypeOrderByImdbScoreDesc(name, "show");
+        return mediaList.stream().map(MediaDTO::new).toList();
     }
 }

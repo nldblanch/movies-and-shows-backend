@@ -56,14 +56,37 @@ public class GenreControllerTest {
     }
 
     @Test
-    public void testGetGenreMedia() throws Exception {
+    public void testGetGenreMovie() throws Exception {
         List<Media> mediaList = CreateSamples.media();
 
         List<MediaDTO> dramaMediaDTOs = mediaList.stream().filter(media -> media.getGenres().stream().anyMatch(genre -> "drama".equalsIgnoreCase(genre.getName()))).map(MediaMapper::toDTO).toList();
 
-        when(genreService.getMediaByGenre("drama")).thenReturn(dramaMediaDTOs);
+        when(genreService.getTop10MoviesByGenre("drama")).thenReturn(dramaMediaDTOs);
 
-        MvcResult result = mockMvc.perform(get("/genres/drama/movies")).andExpect(status().isOk()).andReturn();
+        MvcResult result = mockMvc.perform(get("/genres/drama/top10movies")).andExpect(status().isOk()).andReturn();
+
+        String json = result.getResponse().getContentAsString();
+        ObjectMapper mapper = new ObjectMapper();
+
+        List<MediaDTO> returnedMedia = mapper.readValue(json, new TypeReference<>() {
+        });
+
+        for (MediaDTO media : returnedMedia) {
+            boolean hasDrama = media.getGenres().stream().anyMatch(genre -> "drama".equalsIgnoreCase(genre.getName()));
+
+            assertTrue(hasDrama, "Expected media to include genre 'drama': " + media.getTitle());
+        }
+    }
+
+    @Test
+    public void testGetGenreShow() throws Exception {
+        List<Media> mediaList = CreateSamples.media();
+
+        List<MediaDTO> dramaMediaDTOs = mediaList.stream().filter(media -> media.getGenres().stream().anyMatch(genre -> "drama".equalsIgnoreCase(genre.getName()))).map(MediaMapper::toDTO).toList();
+
+        when(genreService.getTop10ShowsByGenre("drama")).thenReturn(dramaMediaDTOs);
+
+        MvcResult result = mockMvc.perform(get("/genres/drama/top10shows")).andExpect(status().isOk()).andReturn();
 
         String json = result.getResponse().getContentAsString();
         ObjectMapper mapper = new ObjectMapper();

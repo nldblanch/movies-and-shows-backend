@@ -1,10 +1,10 @@
 package com.version1.movies_and_shows_backend.services;
 
 import com.version1.movies_and_shows_backend.dtos.GenreDTO;
+import com.version1.movies_and_shows_backend.dtos.MediaDTO;
 import com.version1.movies_and_shows_backend.helpers.CreateSamples;
 import com.version1.movies_and_shows_backend.mappers.GenreMapper;
-import com.version1.movies_and_shows_backend.models.Genre;
-import com.version1.movies_and_shows_backend.models.Media;
+import com.version1.movies_and_shows_backend.models.*;
 import com.version1.movies_and_shows_backend.repositories.GenreRepository;
 import com.version1.movies_and_shows_backend.repositories.MediaRepository;
 import org.junit.jupiter.api.Test;
@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.swing.plaf.synth.SynthTextAreaUI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -80,24 +81,212 @@ public class GenreServiceTest {
 
     @Test
     public void getMediaByGenreTest(){
-        List<Media> medias = List.of(media);
-        when(mediaRepository.findByGenres_NameIgnoreCase("comedy")).thenReturn(medias);
-        List<Media> result = mediaService.getByGenre("comedy");
-        assertEquals(result, medias);
+        List<Media> mediaList = List.of(media);
+        when(mediaRepository.findByGenres_NameIgnoreCase("comedy")).thenReturn(mediaList);
+        List<MediaDTO> result = genreService.getMediaByGenre("comedy");
 
-        when(mediaRepository.findByGenres_NameIgnoreCase("drama")).thenReturn(medias);
-        result = mediaService.getByGenre("drama");
-        assertEquals(result, medias);
+        MediaDTO expected = mediaList.stream().map(MediaDTO::new).toList().getFirst();
+        MediaDTO actual = result.getFirst();
+
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getTitle(), actual.getTitle());
+        assertEquals(expected.getDescription(), actual.getDescription());
+        assertEquals(expected.getAgeCert(), actual.getAgeCert());
+        assertEquals(expected.getReleaseYear(), actual.getReleaseYear());
+        assertEquals(expected.getRuntime(), actual.getRuntime());
+        assertEquals(expected.getType(), actual.getType());
+        assertEquals(expected.getImdbId(), actual.getImdbId());
+        assertEquals(expected.getImdbScore(), actual.getImdbScore());
+        assertEquals(expected.getImdbVotes(), actual.getImdbVotes());
+        assertEquals(expected.getTmdbPopularity(), actual.getTmdbPopularity());
+        assertEquals(expected.getTmdbScore(), actual.getTmdbScore());
+        assertEquals(expected.getSeasons(), actual.getSeasons());
+
+        // Compare genres
+        assertEquals(
+                expected.getGenres().stream().map(GenreDTO::getName).toList(),
+                actual.getGenres().stream().map(GenreDTO::getName).toList()
+        );
+
+        // Compare sites
+        assertEquals(
+                expected.getSites().stream().map(Site::getName).toList(),
+                actual.getSites().stream().map(Site::getName).toList()
+        );
+
+        // Compare production countries
+        assertEquals(
+                expected.getProductionCountries().stream().map(ProductionCountry::getName).toList(),
+                actual.getProductionCountries().stream().map(ProductionCountry::getName).toList()
+        );
+
+        // Compare cast characters
+        assertEquals(
+                expected.getCast().stream().map(Cast::getCharacter).toList(),
+                actual.getCast().stream().map(Cast::getCharacter).toList()
+        );
+
+        // Compare cast roles
+        assertEquals(
+                expected.getCast().stream().map(Cast::getRole).toList(),
+                actual.getCast().stream().map(Cast::getRole).toList()
+        );
+
+        // Compare cast person names
+        assertEquals(
+                expected.getCast().stream().map(c -> c.getPerson().getName()).toList(),
+                actual.getCast().stream().map(c -> c.getPerson().getName()).toList()
+        );
 
     }
 
     @Test
     public void getMediaByGenreNotFoundTest()
     {
-        List<Media> result = mediaService.getByGenre("cheese");
+        List<MediaDTO> result = genreService.getMediaByGenre("cheese");
         assertEquals(new ArrayList<Media>(), result);
 
-        result = mediaService.getByGenre("romance");
+        result = genreService.getMediaByGenre("romance");
         assertEquals(new ArrayList<Media>(), result);
+    }
+
+
+    @Test
+    public void getTop10MoviesByGenreTest() {
+        List<Media> mediaList = List.of(media);
+        when(mediaRepository.findTop10ByGenres_NameIgnoreCaseAndTypeOrderByImdbScoreDesc("comedy", "movie")).thenReturn(mediaList);
+
+        List<MediaDTO> result = genreService.getTop10MoviesByGenre("comedy");
+
+        MediaDTO expected = mediaList.stream().map(MediaDTO::new).toList().getFirst();
+        MediaDTO actual = result.getFirst();
+
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getTitle(), actual.getTitle());
+        assertEquals(expected.getDescription(), actual.getDescription());
+        assertEquals(expected.getAgeCert(), actual.getAgeCert());
+        assertEquals(expected.getReleaseYear(), actual.getReleaseYear());
+        assertEquals(expected.getRuntime(), actual.getRuntime());
+        assertEquals(expected.getType(), actual.getType());
+        assertEquals(expected.getImdbId(), actual.getImdbId());
+        assertEquals(expected.getImdbScore(), actual.getImdbScore());
+        assertEquals(expected.getImdbVotes(), actual.getImdbVotes());
+        assertEquals(expected.getTmdbPopularity(), actual.getTmdbPopularity());
+        assertEquals(expected.getTmdbScore(), actual.getTmdbScore());
+        assertEquals(expected.getSeasons(), actual.getSeasons());
+
+        // Compare genres
+        assertEquals(
+                expected.getGenres().stream().map(GenreDTO::getName).toList(),
+                actual.getGenres().stream().map(GenreDTO::getName).toList()
+        );
+
+        // Compare sites
+        assertEquals(
+                expected.getSites().stream().map(Site::getName).toList(),
+                actual.getSites().stream().map(Site::getName).toList()
+        );
+
+        // Compare production countries
+        assertEquals(
+                expected.getProductionCountries().stream().map(ProductionCountry::getName).toList(),
+                actual.getProductionCountries().stream().map(ProductionCountry::getName).toList()
+        );
+
+        // Compare cast characters
+        assertEquals(
+                expected.getCast().stream().map(Cast::getCharacter).toList(),
+                actual.getCast().stream().map(Cast::getCharacter).toList()
+        );
+
+        // Compare cast roles
+        assertEquals(
+                expected.getCast().stream().map(Cast::getRole).toList(),
+                actual.getCast().stream().map(Cast::getRole).toList()
+        );
+
+        // Compare cast person names
+        assertEquals(
+                expected.getCast().stream().map(c -> c.getPerson().getName()).toList(),
+                actual.getCast().stream().map(c -> c.getPerson().getName()).toList()
+        );
+    }
+    @Test
+    public void getTop10MoviesByGenreNotFoundTest() {
+        List<MediaDTO> result = genreService.getTop10MoviesByGenre("cheese");
+        assertEquals(new ArrayList<Media>(), result);
+        result = genreService.getTop10MoviesByGenre("romance");
+        assertEquals(new ArrayList<Media>(), result);
+    }
+    @Test
+    public void getTop10ShowsByGenreTest() {
+        List<Media> mediaList = List.of(media);
+        when(mediaRepository.findTop10ByGenres_NameIgnoreCaseAndTypeOrderByImdbScoreDesc("comedy", "show")).thenReturn(mediaList);
+
+        List<MediaDTO> result = genreService.getTop10ShowsByGenre("comedy");
+
+        MediaDTO expected = mediaList.stream().map(MediaDTO::new).toList().getFirst();
+        MediaDTO actual = result.getFirst();
+
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getTitle(), actual.getTitle());
+        assertEquals(expected.getDescription(), actual.getDescription());
+        assertEquals(expected.getAgeCert(), actual.getAgeCert());
+        assertEquals(expected.getReleaseYear(), actual.getReleaseYear());
+        assertEquals(expected.getRuntime(), actual.getRuntime());
+        assertEquals(expected.getType(), actual.getType());
+        assertEquals(expected.getImdbId(), actual.getImdbId());
+        assertEquals(expected.getImdbScore(), actual.getImdbScore());
+        assertEquals(expected.getImdbVotes(), actual.getImdbVotes());
+        assertEquals(expected.getTmdbPopularity(), actual.getTmdbPopularity());
+        assertEquals(expected.getTmdbScore(), actual.getTmdbScore());
+        assertEquals(expected.getSeasons(), actual.getSeasons());
+
+        // Compare genres
+                assertEquals(
+                        expected.getGenres().stream().map(GenreDTO::getName).toList(),
+                        actual.getGenres().stream().map(GenreDTO::getName).toList()
+                );
+
+        // Compare sites
+                assertEquals(
+                        expected.getSites().stream().map(Site::getName).toList(),
+                        actual.getSites().stream().map(Site::getName).toList()
+                );
+
+        // Compare production countries
+                assertEquals(
+                        expected.getProductionCountries().stream().map(ProductionCountry::getName).toList(),
+                        actual.getProductionCountries().stream().map(ProductionCountry::getName).toList()
+                );
+
+        // Compare cast characters
+                assertEquals(
+                        expected.getCast().stream().map(Cast::getCharacter).toList(),
+                        actual.getCast().stream().map(Cast::getCharacter).toList()
+                );
+
+        // Compare cast roles
+                assertEquals(
+                        expected.getCast().stream().map(Cast::getRole).toList(),
+                        actual.getCast().stream().map(Cast::getRole).toList()
+                );
+
+        // Compare cast person names
+                assertEquals(
+                        expected.getCast().stream().map(c -> c.getPerson().getName()).toList(),
+                        actual.getCast().stream().map(c -> c.getPerson().getName()).toList()
+                );
+
+
+
+    }
+    @Test
+    public void getTop10ShowsByGenreNotFoundTest() {
+        List<MediaDTO> result = genreService.getTop10ShowsByGenre("cheese");
+        assertEquals(new ArrayList<Media>(), result);
+        result = genreService.getTop10ShowsByGenre("romance");
+        assertEquals(new ArrayList<Media>(), result);
+
     }
 }

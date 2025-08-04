@@ -27,15 +27,37 @@ public class GenreController {
         return genreService.getGenreByName(name);
     }
 
-    // GET /genres/{name}/movies
-    @GetMapping("/{name}/movies")
-    public List<MediaDTO> getGenreMovies(@PathVariable String name) {
-        return genreService.getMediaByGenre(name);
-    }
+//    // GET /genres/{name}/movies
+//    @GetMapping("/{name}/movies")
+//    public List<MediaDTO> getGenreMovies(@PathVariable String name) {
+//        return genreService.getMoviesByGenre(name);
+//    }
+//
+//    // GET /genres/{name}/shows
+//    @GetMapping("/{name}/shows")
+//    public List<MediaDTO> getGenreShows(@PathVariable String name) {
+//        // Assuming the service method is implemented to filter shows by genre
+//        return genreService.getShowsByGenre(name); // Adjust this method to filter shows if needed
+//    }
+
+         //GET /genres/{name}/top10movies
+         @GetMapping("/{name}/top10movies")
+         public List<MediaDTO> getTop10MoviesByGenre(@PathVariable String name) {
+             return genreService.getTop10MoviesByGenre(name);
+         }
+         //GET /genres/{name}/top10shows
+         @GetMapping("/{name}/top10shows")
+         public List<MediaDTO> getTop10ShowsByGenre(@PathVariable String name)
+         {
+             return genreService.getTop10ShowsByGenre(name);
+         }
+
 
     // GET /genres/{name}/analytics
 //    @GetMapping("/{name}/analytics")
 //    public GenreAnalytics getGenreAnalytics(@PathVariable String name) {
 //        return genreService.getGenreAnalytics(name);
 //    }
+
+    //
 }

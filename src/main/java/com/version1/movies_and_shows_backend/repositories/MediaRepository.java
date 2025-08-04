@@ -30,4 +30,8 @@ public interface MediaRepository extends JpaRepository<Media, String> {
 
     List<Media> findByTitleContainingIgnoreCase(String title);
 
+    List<Media> findTop10ByGenres_NameIgnoreCaseAndTypeOrderByImdbScoreDesc(String genreName, String type);
+
+    List<Media> findTop10BySites_NameIgnoreCaseAndTypeOrderByImdbScoreDesc(String siteName, String type);
+
 }
