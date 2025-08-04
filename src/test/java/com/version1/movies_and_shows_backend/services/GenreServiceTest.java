@@ -5,6 +5,7 @@ import com.version1.movies_and_shows_backend.helpers.CreateSamples;
 import com.version1.movies_and_shows_backend.mappers.GenreMapper;
 import com.version1.movies_and_shows_backend.models.Genre;
 import com.version1.movies_and_shows_backend.repositories.GenreRepository;
+import com.version1.movies_and_shows_backend.repositories.GenreStatsRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,6 +24,9 @@ public class GenreServiceTest {
     @Mock
     private GenreRepository genreRepository;
 
+    @Mock
+    private GenreStatsRepository genreStatsRepository;
+
     @InjectMocks
     private GenreService  genreService;
 
@@ -32,8 +36,8 @@ public class GenreServiceTest {
     public void getAllGenresTest()
     {
         when(genreRepository.findAll()).thenReturn(genres);
-
-        List<GenreDTO> result = genreService.getAllGenres(false);
+        when(genreStatsRepository.findAll()).thenReturn(new ArrayList<>());
+        List<GenreDTO> result = genreService.getAllGenres();
 
         assertEquals(genres.stream().map(GenreMapper::toDTO).toList(),result);
     }
@@ -41,8 +45,9 @@ public class GenreServiceTest {
     @Test
     public void getAllGenresNotFoundTest()
     {
-
-        List<GenreDTO> result = genreService.getAllGenres(false);
+        when(genreRepository.findAll()).thenReturn(new ArrayList<>());
+        when(genreStatsRepository.findAll()).thenReturn(new ArrayList<>());
+        List<GenreDTO> result = genreService.getAllGenres();
 
         assertEquals(new ArrayList<>(),result);
     }

@@ -1,3 +1,9 @@
+# Clean and compile
+./mvnw clean compile
+
+# Run the Spring Boot application
+./mvnw spring-boot:run
+
 
 <h2>📚 API Endpoints</h2>
 
