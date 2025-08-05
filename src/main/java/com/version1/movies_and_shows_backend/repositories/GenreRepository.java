@@ -21,4 +21,6 @@ public interface GenreRepository extends JpaRepository<Genre, Integer> {
             "GROUP BY g.id, g.name " +
             "ORDER BY g.name")
     List<GenreDTO> getGenreStats();
+
+
 }
